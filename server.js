@@ -25,7 +25,7 @@ app.use(
   })
 );
 
-// Routes CC
+// Routes
 
 app.use("/api/projects", projectsRoute);
 
