@@ -57,6 +57,14 @@ const projectsSchema = mongoose.Schema({
     type: Number,
     default: "",
   },
+  marketCapUsd: {
+    type: Number,
+    default: "",
+  },
+  trades24h: {
+    type: Number,
+    default: "",
+  },
   date: {
     type: String,
     default: "",

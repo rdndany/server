@@ -4,17 +4,34 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 
 const getProjects = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 15;
+  const skip = (page - 1) * limit;
+  console.log(limit);
   try {
-    let projects = await Projects.find({});
+    // Fetch total count of projects
+    const totalCount = await Projects.countDocuments();
 
-    // console.log("Retrieved projects:", projects); // Add this line for debugging
+    // Fetch projects for the specified page and limit
+    const projects = await Projects.find({}).skip(skip).limit(limit).exec();
 
     if (projects.length === 0) {
-      console.log("No projects found in the database"); // Add this line for debugging
+      console.log("No projects found in the database");
     }
+
+    // Calculate the sum of marketCapUsd
+    const totalMarketCapUsd = projects.reduce(
+      (acc, project) => acc + (project.marketCapUsd || 0),
+      0
+    );
 
     res.status(200).json({
       projects,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+      totalCount,
+      limit,
+      totalMarketCapUsd,
     });
   } catch (error) {
     console.error(error);
@@ -75,11 +92,26 @@ const getProjectsPrices = asyncHandler(async (req, res) => {
 
     // Iterate through the received data and update your database
     for (const entry of data) {
-      const { address, priceUsd, priceUsd24hAgo, priceUsd7dAgo } = entry;
+      const {
+        address,
+        priceUsd,
+        priceUsd24hAgo,
+        priceUsd7dAgo,
+        marketCapUsd,
+        trades24h,
+      } = entry;
       // Update documents in the 'Projects' collection based on address
       const result = await Projects.updateMany(
         { address: { $regex: new RegExp("^" + address + "$", "i") } },
-        { $set: { priceUsd, priceUsd24hAgo, priceUsd7dAgo } }
+        {
+          $set: {
+            priceUsd,
+            priceUsd24hAgo,
+            priceUsd7dAgo,
+            marketCapUsd,
+            trades24h,
+          },
+        }
       );
 
       // Log the result for debugging
