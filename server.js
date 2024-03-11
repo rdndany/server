@@ -18,12 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "https://cc-teal-beta.vercel.app"],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // Routes
 
