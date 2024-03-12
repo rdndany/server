@@ -134,7 +134,10 @@ const getSearchProjects = asyncHandler(async (req, res) => {
   let projects = await Projects.find();
   if (searchTerm) {
     projects = projects.filter((project) => {
-      return project.name.toLowerCase().includes(searchTerm.toLowerCase());
+      return (
+        project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.address.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     });
   }
   res.status(200).json({
