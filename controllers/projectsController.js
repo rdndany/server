@@ -7,7 +7,7 @@ const getProjects = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 15;
   const skip = (page - 1) * limit;
-  console.log(limit);
+
   try {
     // Fetch total count of projects
     const totalCount = await Projects.countDocuments();
@@ -130,7 +130,7 @@ const getProjectsPrices = asyncHandler(async (req, res) => {
 
 const getSearchProjects = asyncHandler(async (req, res) => {
   const searchTerm = req.body.searchTerm;
-  console.log(req.body);
+
   let projects = await Projects.find();
   if (searchTerm) {
     projects = projects.filter((project) => {
@@ -145,9 +145,28 @@ const getSearchProjects = asyncHandler(async (req, res) => {
   });
 });
 
+const getProjectsByHandle = asyncHandler(async (req, res) => {
+  const projectHandle = req.body.handle;
+  console.log(projectHandle, " a");
+  let project;
+
+  project = await Projects.find({
+    handle: projectHandle,
+  });
+
+  if (!project) {
+    res.status(400);
+    throw new Error("Something went wrong");
+  }
+  res.status(200).json({
+    project,
+  });
+});
+
 module.exports = {
   getProjects,
   addProject,
   getSearchProjects,
   getProjectsPrices,
+  getProjectsByHandle,
 };

@@ -9,6 +9,10 @@ const projectsSchema = mongoose.Schema({
     type: String,
     default: "",
   },
+  handle: {
+    type: String,
+    default: "",
+  },
   logo: {
     type: String,
     default: "",
