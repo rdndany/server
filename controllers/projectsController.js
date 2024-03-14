@@ -13,7 +13,11 @@ const getProjects = asyncHandler(async (req, res) => {
     const totalCount = await Projects.countDocuments();
 
     // Fetch projects for the specified page and limit
-    const projects = await Projects.find({}).skip(skip).limit(limit).exec();
+    const projects = await Projects.find({})
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
 
     if (projects.length === 0) {
       console.log("No projects found in the database");
