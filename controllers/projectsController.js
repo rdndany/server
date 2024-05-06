@@ -66,7 +66,7 @@ const getProjectsPrices = asyncHandler(async (req, res) => {
 
   allProjects.forEach((project) => {
     const { network, address } = project;
-
+    console.log(projects);
     // Determine the network code
 
     // Check if the network code is defined
